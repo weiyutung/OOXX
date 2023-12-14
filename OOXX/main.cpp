@@ -19,7 +19,17 @@ public:
 
     // 顯示遊戲棋盤
     void displayBoard() const {
+    // 打印列号
+        cout << "   ";
+        for (int col = 0; col < BOARD_SIZE; ++col) {
+            cout << "" << col << "   ";
+        }
+        cout << endl;
+
+    // 打印行号和棋盘内容
         for (int i = 0; i < BOARD_SIZE; ++i) {
+            cout << i << " "; // 打印行号
+
             for (int j = 0; j < BOARD_SIZE; ++j) {
                 switch (board[i][j]) {
                     case Player::X:
@@ -36,18 +46,26 @@ public:
                     cout << "|";
             }
             cout << endl;
+
             if (i < BOARD_SIZE - 1) {
-                cout << "-----------" << endl;
+                cout << "  ";
+                for (int k = 0; k < BOARD_SIZE; ++k) {
+                    cout << "---";
+                    if (k < BOARD_SIZE - 1)
+                        cout << "+";
+                }
+                cout << endl;
             }
         }
         cout << endl;
     }
 
+
     // 玩家進行移動
     bool makeMove(int row, int col, Player currentPlayer) {
         if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE || board[row][col] != Player::NONE) {
             // 無效移動
-            cout << "無效的移動，請重新選擇位置。" << endl;
+            cout << "Invalid move, please choose a different position." << endl;
             return false;
         }
 
@@ -98,26 +116,28 @@ int main() {
 
         // 玩家輸入
         int row, col;
-        cout << "輪到 " << (currentPlayer == Player::X ? "X" : "O") << " 輸入位置 (行 列): ";
+        cout << "It's " << (currentPlayer == Player::X ? "X" : "O") << " turn " << "please enter (row,col) : ";
         cin >> row >> col;
+        cout << endl;
 
         // 玩家進行移動，直到有效移動為止
         while (!game.makeMove(row, col, currentPlayer)) {
-            cout << "輸入無效，請重新輸入位置 (行 列): ";
+            cout << "please enter (row,col) : ";
             cin >> row >> col;
+
         }
 
         // 檢查是否獲勝
         if (game.checkWin(currentPlayer)) {
             game.displayBoard();
-            cout << (currentPlayer == Player::X ? "X" : "O") << " 獲勝！遊戲結束。" << endl;
+            cout << (currentPlayer == Player::X ? "X" : "O") << " You win！Game Over。" << endl;
             break;
         }
 
         // 檢查是否平局
         if (game.checkDraw()) {
             game.displayBoard();
-            cout << "遊戲平局！" << endl;
+            cout << "It's a tie！" << endl;
             break;
         }
 
