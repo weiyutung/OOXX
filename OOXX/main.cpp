@@ -9,35 +9,48 @@ using namespace std;
 const int BOARD_SIZE = 3;
 
 // 定義玩家類型
-enum class Player { NONE, X, O };
+enum class Player { NONE, PLAYER1, PLAYER2 };
+
 
 // 定義遊戲類
 class TicTacToe {
 private:
     vector<vector<Player>> board; // 遊戲棋盤
+    vector<string> players;       // 玩家名稱
+    size_t currentPlayerIndex;    // 目前玩家的索引
 
 public:
-    TicTacToe() : board(BOARD_SIZE, vector<Player>(BOARD_SIZE, Player::NONE)) {}
+    TicTacToe() : board(BOARD_SIZE, vector<Player>(BOARD_SIZE, Player::NONE)), currentPlayerIndex(0) {}
+
+    // 新增玩家
+    void addPlayer(const string& playerName) {
+        players.push_back(playerName);
+    }
+
+    // 取得目前玩家名稱
+    string getCurrentPlayerName() const {
+        return players[currentPlayerIndex];
+    }
 
     // 顯示遊戲棋盤
     void displayBoard() const {
-    // 打印列号
+        // 打印列号
         cout << "   ";
         for (int col = 0; col < BOARD_SIZE; ++col) {
             cout << "" << col << "   ";
         }
         cout << endl;
 
-    // 打印行号和棋盘内容
+        // 打印行号和棋盘内容
         for (int i = 0; i < BOARD_SIZE; ++i) {
             cout << i << " "; // 打印行号
 
             for (int j = 0; j < BOARD_SIZE; ++j) {
                 switch (board[i][j]) {
-                    case Player::X:
+                    case Player::PLAYER1:
                         cout << " X ";
                         break;
-                    case Player::O:
+                    case Player::PLAYER2:
                         cout << " O ";
                         break;
                     default:
@@ -61,7 +74,6 @@ public:
         }
         cout << endl;
     }
-
 
     // 玩家進行移動
     bool makeMove(int row, int col, Player currentPlayer) {
@@ -106,16 +118,32 @@ public:
         }
         return true; // 所有格子都滿了，平局
     }
-};
 
+    // 抽籤選擇下一位玩家
+    void drawNextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+};
 
 int main() {
     srand(static_cast<unsigned int>(time(nullptr)));
     TicTacToe game;
-    Player currentPlayer = static_cast<Player>(rand() % 2 == 0 ? Player::X : Player::O);  // 隨機決定先手玩家
 
-    cout << "Welcome to Tic-Tac-Toe!" << endl;
-    cout << (currentPlayer == Player::X ? "X" : "O") << " goes first!" << endl;
+    // 新增玩家
+    string playerName1, playerName2;
+    cout << "Enter Player 1's name: ";
+    cin >> playerName1;
+    game.addPlayer(playerName1);
+
+    cout << "Enter Player 2's name: ";
+    cin >> playerName2;
+    game.addPlayer(playerName2);
+    cout << endl;
+
+    Player currentPlayer = (rand() % 2 == 0) ? Player::PLAYER1 : Player::PLAYER2;  // 隨機決定先手玩家
+
+    cout << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " goes first!" << endl;
+    cout << endl;
 
     while (true) {
         // 顯示當前狀態
@@ -123,33 +151,35 @@ int main() {
 
         // 玩家輸入
         int row, col;
-        cout << "It's " << (currentPlayer == Player::X ? "X" : "O") << " turn " << "please enter (row,col) : ";
+        cout << "It's " << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " turn, please enter (row,col): ";
         cin >> row >> col;
         cout << endl;
 
+
         // 玩家進行移動，直到有效移動為止
         while (!game.makeMove(row, col, currentPlayer)) {
-            cout << "please enter (row,col) : ";
+            //cout << "Invalid move, please choose a different position." << endl;
+            cout << "Please enter (row, col): ";
             cin >> row >> col;
-
         }
 
         // 檢查是否獲勝
         if (game.checkWin(currentPlayer)) {
             game.displayBoard();
-            cout << (currentPlayer == Player::X ? "X" : "O") << " You win！Game Over。" << endl;
+            cout << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " You win! Game Over." << endl;
             break;
         }
 
         // 檢查是否平局
         if (game.checkDraw()) {
             game.displayBoard();
-            cout << "It's a tie！" << endl;
+            cout << "It's a tie!" << endl;
             break;
         }
 
-        // 切換玩家
-        currentPlayer = (currentPlayer == Player::X) ? Player::O : Player::X;
+        // 抽籤選擇下一位玩家
+        game.drawNextPlayer();
+        currentPlayer = (currentPlayer == Player::PLAYER1) ? Player::PLAYER2 : Player::PLAYER1;
     }
 
     return 0;
