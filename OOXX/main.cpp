@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib>  // 包含cstdlib頭文件以使用rand函數
+#include <ctime>    // 包含ctime頭文件以使用time函數
 
 using namespace std;
 
@@ -106,9 +108,14 @@ public:
     }
 };
 
+
 int main() {
+    srand(static_cast<unsigned int>(time(nullptr)));
     TicTacToe game;
-    Player currentPlayer = Player::X;
+    Player currentPlayer = static_cast<Player>(rand() % 2 == 0 ? Player::X : Player::O);  // 隨機決定先手玩家
+
+    cout << "Welcome to Tic-Tac-Toe!" << endl;
+    cout << (currentPlayer == Player::X ? "X" : "O") << " goes first!" << endl;
 
     while (true) {
         // 顯示當前狀態
