@@ -18,10 +18,11 @@ private:
     vector<vector<Player>> board; // 遊戲棋盤
     vector<string> players;       // 玩家名稱
     size_t currentPlayerIndex;    // 目前玩家的索引
-    size_t player1Wins;  // 紀錄玩家1贏的回合數
-    size_t player2Wins;  // 紀錄玩家2贏的回合數
+
 
 public:
+    size_t player1Wins;  // 紀錄玩家1贏的回合數
+    size_t player2Wins;  // 紀錄玩家2贏的回合數
  TicTacToe() : board(BOARD_SIZE, vector<Player>(BOARD_SIZE, Player::NONE)), currentPlayerIndex(0), player1Wins(0), player2Wins(0) {}
     // 新增玩家
     void addPlayer(const string& playerName) {
@@ -133,9 +134,18 @@ public:
     }
     // 顯示整體結果
     void displayOverallResults() const {
-        cout << "Overall Results:" << endl;
-        cout << players[0] << " (Player 1) wins: " << getPlayer1Wins() << " rounds" << endl;
-        cout << players[1] << " (Player 2) wins: " << getPlayer2Wins() << " rounds" << endl;
+        if(getPlayer1Wins() == 1 || getPlayer1Wins() == 0)
+            cout << players[0] << " wins: " << getPlayer1Wins() << " round" << endl;
+        else
+            cout << players[0] << " wins: " << getPlayer1Wins() << " rounds" << endl;
+
+        if(getPlayer2Wins() == 1 || getPlayer2Wins() == 0)
+            cout << players[1] << " wins: " << getPlayer2Wins() << " round" << endl;
+        else
+            cout << players[1] << " wins: " << getPlayer2Wins() << " rounds" << endl;
+
+        //cout << players[0] << " : " << players[1] << " = "<< getPlayer1Wins() << " : " << getPlayer2Wins() << endl;
+
     }
     // 重置棋盤
     void resetBoard() {
@@ -157,13 +167,14 @@ int main() {
     cout << "Enter Player 2's name: ";
     cin >> playerName2;
     game.addPlayer(playerName2);
-    cout << endl;
+
 
     bool playAgain = true;
 
     while (playAgain) {
         game.resetBoard();  // 重置棋盤
         Player currentPlayer = (rand() % 2 == 0) ? Player::PLAYER1 : Player::PLAYER2;  // 隨機決定先手玩家
+        cout << endl;
         cout << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " goes first!" << endl;
         cout << endl;
         bool gameIsOver = false;  // 新增變數來標記遊戲是否已經結束
@@ -184,13 +195,20 @@ int main() {
                 //cout << "Invalid move, please choose a different position." << endl;
                 cout << "Please enter (row, col): ";
                 cin >> row >> col;
+                cout << endl;
             }
 
             // 檢查是否獲勝
             if (game.checkWin(currentPlayer)) {
                 game.displayBoard();
-                cout << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " You win! Game Over." << endl;
+                cout << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " Win! Game Over." << endl;
                 gameIsOver = true;
+                if (currentPlayer == Player::PLAYER1) {
+                    game.player1Wins++;
+                } else if (currentPlayer == Player::PLAYER2) {
+                    game.player2Wins++;
+                }
+
                 break;
             }
 
@@ -215,6 +233,10 @@ int main() {
             playAgain = false;
 
     }
+
+    cout << endl;
+    game.displayOverallResults();
     cout << "Goodbye!" << endl;
+
     return 0;
 }
