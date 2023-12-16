@@ -144,8 +144,6 @@ public:
         else
             cout << players[1] << " wins: " << getPlayer2Wins() << " rounds" << endl;
 
-        //cout << players[0] << " : " << players[1] << " = "<< getPlayer1Wins() << " : " << getPlayer2Wins() << endl;
-
     }
     // 重置棋盤
     void resetBoard() {
