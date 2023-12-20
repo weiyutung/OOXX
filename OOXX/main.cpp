@@ -3,17 +3,29 @@
 
 #include <iostream>
 #include <vector>
+<<<<<<< Updated upstream
 #include <cstdlib>
 #include <ctime>
+=======
+#include <cstdlib>  // 包含cstdlib頭文件以使用rand函數
+#include <ctime>    // 包含ctime頭文件以使用time函數
+>>>>>>> Stashed changes
 
 using namespace std;
 
 const int BOARD_SIZE = 3;                       // 定義遊戲棋盤大小
 
+<<<<<<< Updated upstream
 enum class Player { NONE, PLAYER1, PLAYER2 };   // 定義玩家類型
+=======
+// 定義玩家類型
+enum class Player { NONE, PLAYER1, PLAYER2 };
+
+>>>>>>> Stashed changes
 
 class TicTacToe {                               // 定義遊戲類
 private:
+<<<<<<< Updated upstream
     vector<vector<Player>> board;               // 遊戲棋盤
     vector<string> players;                     // 玩家名稱
     size_t currentPlayerIndex;                  // 目前玩家的索引
@@ -42,6 +54,38 @@ public:
         for (int i = 0; i < BOARD_SIZE; ++i) {          // 印 col 和 board
             cout << i << " ";
 
+=======
+    vector<vector<Player>> board; // 遊戲棋盤
+    vector<string> players;       // 玩家名稱
+    size_t currentPlayerIndex;    // 目前玩家的索引
+
+public:
+    TicTacToe() : board(BOARD_SIZE, vector<Player>(BOARD_SIZE, Player::NONE)), currentPlayerIndex(0) {}
+
+    // 新增玩家
+    void addPlayer(const string& playerName) {
+        players.push_back(playerName);
+    }
+
+    // 取得目前玩家名稱
+    string getCurrentPlayerName() const {
+        return players[currentPlayerIndex];
+    }
+
+    // 顯示遊戲棋盤
+    void displayBoard() const {
+        // 打印列号
+        cout << "   ";
+        for (int col = 0; col < BOARD_SIZE; ++col) {
+            cout << "" << col << "   ";
+        }
+        cout << endl;
+
+        // 打印行号和棋盘内容
+        for (int i = 0; i < BOARD_SIZE; ++i) {
+            cout << i << " "; // 打印行号
+
+>>>>>>> Stashed changes
             for (int j = 0; j < BOARD_SIZE; ++j) {
                 switch (board[i][j]) {
                     case Player::PLAYER1:
@@ -74,7 +118,12 @@ public:
 
     bool makeMove(int row, int col, Player currentPlayer) {                                 // 玩家進行移動
         if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE || board[row][col] != Player::NONE) {
+<<<<<<< Updated upstream
             cout << "Invalid move, please choose a different position." << endl;            // 無效移動
+=======
+            // 無效移動
+            cout << "Invalid move, please choose a different position." << endl;
+>>>>>>> Stashed changes
             return false;
         }
 
@@ -134,14 +183,21 @@ public:
         board = vector<vector<Player>>(BOARD_SIZE, vector<Player>(BOARD_SIZE, Player::NONE));
         currentPlayerIndex = 0;
     }
+
+    // 抽籤選擇下一位玩家
+    void drawNextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
 };
 
 int main() {
     srand(static_cast<unsigned int>(time(nullptr)));
     TicTacToe game;
+<<<<<<< Updated upstream
+=======
 
+    // 新增玩家
     string playerName1, playerName2;
-
     cout << "Enter Player 1's name: ";
     cin >> playerName1;
     game.addPlayer(playerName1);
@@ -149,6 +205,39 @@ int main() {
     cout << "Enter Player 2's name: ";
     cin >> playerName2;
     game.addPlayer(playerName2);
+    cout << endl;
+
+    Player currentPlayer = (rand() % 2 == 0) ? Player::PLAYER1 : Player::PLAYER2;  // 隨機決定先手玩家
+
+    cout << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " goes first!" << endl;
+    cout << endl;
+>>>>>>> Stashed changes
+
+    string playerName1, playerName2;
+
+<<<<<<< Updated upstream
+    cout << "Enter Player 1's name: ";
+    cin >> playerName1;
+    game.addPlayer(playerName1);
+
+    cout << "Enter Player 2's name: ";
+    cin >> playerName2;
+    game.addPlayer(playerName2);
+=======
+        // 玩家輸入
+        int row, col;
+        cout << "It's " << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " turn, please enter (row,col): ";
+        cin >> row >> col;
+        cout << endl;
+
+
+        // 玩家進行移動，直到有效移動為止
+        while (!game.makeMove(row, col, currentPlayer)) {
+            //cout << "Invalid move, please choose a different position." << endl;
+            cout << "Please enter (row, col): ";
+            cin >> row >> col;
+        }
+>>>>>>> Stashed changes
 
     bool playAgain = true;
 
@@ -163,6 +252,7 @@ int main() {
 
         while (!gameIsOver) {          // 顯示當前狀態
             game.displayBoard();
+<<<<<<< Updated upstream
 
             int row, col;
             cout << "It's " << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " turn" << endl;
@@ -210,6 +300,22 @@ int main() {
         if (response != 'y' && response != 'Y')
             playAgain = false;
 
+=======
+            cout << (currentPlayer == Player::PLAYER1 ? playerName1 : playerName2) << " You win! Game Over." << endl;
+            break;
+        }
+
+        // 檢查是否平局
+        if (game.checkDraw()) {
+            game.displayBoard();
+            cout << "It's a tie!" << endl;
+            break;
+        }
+
+        // 抽籤選擇下一位玩家
+        game.drawNextPlayer();
+        currentPlayer = (currentPlayer == Player::PLAYER1) ? Player::PLAYER2 : Player::PLAYER1;
+>>>>>>> Stashed changes
     }
 
     cout << endl;
