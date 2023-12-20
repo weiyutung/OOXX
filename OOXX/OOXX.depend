@@ -1,9 +1,13 @@
 # depslib dependency file v1.0
-<<<<<<< Updated upstream
-1703035152 source:d:\github\ooxx\ooxx\main.cpp
-=======
-1702557346 source:d:\github\ooxx\ooxx\main.cpp
->>>>>>> Stashed changes
+140714173845930 <<<<<<< Updated upstream
+
+1703040089 source:d:\github\ooxx\ooxx\main.cpp
+	<iostream>
+	<vector>
+	<cstdlib>
+	<ctime>
+
+1702557346 shed changes
 	<iostream>
 	<vector>
 	<cstdlib>
